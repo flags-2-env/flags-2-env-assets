@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "package": "flags-2-env/flags-2-env-assets",
+  "assets": [
+    {
+      "path": "branding/app-logo.png",
+      "mediaType": "image/png",
+      "sha256": "06f1dfd493d46c46a603ba7e237051b2f431a47db76977aed8728f3006aada6d",
+      "bytes": 934658,
+      "width": 1254,
+      "height": 1254,
+      "role": "app-launcher-source",
+      "brandApproval": "pending"
+    }
+  ]
+}
