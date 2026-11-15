@@ -1,0 +1,39 @@
+name: PNG asset integrity
+on:
+  pull_request:
+    paths:
+      - 'branding/**'
+      - 'tools/validate_assets.rs'
+      - '.github/workflows/png-asset-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'branding/**'
+      - 'tools/validate_assets.rs'
+      - '.github/workflows/png-asset-integrity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  png-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Exact-head SHA and whitespace
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          git diff --check
+      - name: Build and run offline Rust unit tests
+        run: |
+          rustc --edition 2021 --test tools/validate_assets.rs -o /tmp/asset-check-tests
+          /tmp/asset-check-tests
+      - name: Validate checked-in PNG assets
+        run: |
+          rustc --edition 2021 tools/validate_assets.rs -o /tmp/asset-check
+          /tmp/asset-check
